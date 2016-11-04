@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">XinWenKeHuDuan</string>
+    <string name="TextView">资讯</string>
+    <string name="TextView1">军事</string>
+    <string name="TextView2">社会</string>
+    <string name="TextView3">新闻</string>
+    <string name="TextView4">收藏</string>
+    <string name="TextView5">本地</string>
+    <string name="TextView6">跟帖</string>
+    <string name="TextView7">图片</string>
+    <string name="TextView8">立刻登陆</string>
+    <string name="TextView9">更新版本</string>
+    <string name="TextView10">请输入用户名</string>
+    <string name="TextView11">密码</string>
+    <string name="TextView12">请输入邮箱地址</string>
+    <string name="TextView13">我同意"服务条款"和"网络用户隐私保护和个人信息利用政策"</string>
+    <string name="TextView14">输入注册时的邮箱地址</string>
+    <string name="TextView15">确认</string>
+    <string name="Buttn1">注册</string>
+    <string name="Buttn2">忘记密码</string>
+    <string name="Buttn3">登陆</string>
+    <string name="Buttn4">立即注册</string>
+</resources>

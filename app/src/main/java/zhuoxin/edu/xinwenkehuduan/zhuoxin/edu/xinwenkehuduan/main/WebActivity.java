@@ -1,28 +1,18 @@
 package zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.main;
 
 import android.content.Intent;
-import android.media.Image;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.Switch;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.util.ArrayList;
+import android.widget.PopupWindow;
 
 import zhuoxin.edu.xinwenkehuduan.R;
-import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.entity.ChildInfo;
-import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.entity.GroupInfo;
-import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.fragment.CenterFragment;
-import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.inter.OnLoadNewcustomLlister;
 
 /**
  * Created by Administrator on 2016/11/1.
@@ -34,7 +24,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
     String mUrl;
     ImageView mImg_back;
     ImageView mImg_news;
-
+    PopupWindow mPopupWindow;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +39,19 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
         super.onContentChanged();
         initData();
         webUrl();
+        mPopupWindow =new PopupWindow();
+        //设置view
+        View  view=this.getLayoutInflater().inflate(R.layout.popupwindow,null);
+        mPopupWindow.setContentView(view);
+        //设置宽高
+        mPopupWindow.setWidth(100);
+        mPopupWindow.setHeight(50);
+        //设置焦点
+        mPopupWindow.setFocusable(true);
+        //设置点击取消
+        mPopupWindow.setOutsideTouchable(true );
+        //设置背景
+        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
 
 
     }
@@ -118,6 +121,8 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 Intent intent = new Intent(WebActivity.this, MainActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.img_news:
+                mPopupWindow.showAsDropDown(v);
 
 
         }

@@ -55,6 +55,7 @@
             android:src="@mipmap/fun_share_weixin"/>
 
         <ImageView
+            android:id="@+id/img_qq"
             android:layout_width="35dp"
             android:layout_height="40dp"
             android:layout_weight="1"

@@ -1,6 +1,7 @@
 package zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.main;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -25,9 +26,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     CenterFragment mCenterFragment;
     LeftFragment mLeftFragment;
     RightFragment mRightFragment;
-   LoginFragment mLoginFragment;
-   // NewFragment mNewFragment;
-    DrawerLayout mDrawerLayout;
+    LoginFragment mLoginFragment;
+    public static DrawerLayout mDrawerLayout;
     ImageView mImg_dark;
     TextView mText_rightfragment;
     TextView mText_main;
@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mLeftFragment = new LeftFragment();
         mRightFragment = new RightFragment();
         mCenterFragment = new CenterFragment();
-        //mNewFragment=new NewFragment();
         mLoginFragment = new LoginFragment();
         FragmentManager Manager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = Manager.beginTransaction();
@@ -95,22 +94,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.img_dark:
-                FragmentManager Manager = getSupportFragmentManager();
+               /* FragmentManager Manager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = Manager.beginTransaction();
                 fragmentTransaction.replace(R.id.lyt_center, mLoginFragment);
-                fragmentTransaction.commit();
-               /* Intent intent=new Intent(MainActivity.this,NewActivity.class);
-                startActivity(intent);*/
+                fragmentTransaction.commit();*/
+                Intent intent = new Intent(MainActivity.this, FragmentActivity.class);
+                startActivity(intent);
                 if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT) == true) {
                     mDrawerLayout.closeDrawer(Gravity.RIGHT);
                 }
                 mText_main.setText("用户登录");
                 break;
             case R.id.txt_rightfragment:
-                FragmentManager Manager0 = getSupportFragmentManager();
+                /*FragmentManager Manager0 = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction0 = Manager0.beginTransaction();
                 fragmentTransaction0.replace(R.id.lyt_center, mLoginFragment);
-                fragmentTransaction0.commit();
+                fragmentTransaction0.commit();*/
+                Intent intent1 = new Intent(MainActivity.this, FragmentActivity.class);
+                startActivity(intent1);
                 if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT) == true) {
                     mDrawerLayout.closeDrawer(Gravity.RIGHT);
                 }
@@ -127,6 +128,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mText_main.setText("资讯");
                 break;
 
+        }
+    }
+
+    public static void data() {
+        if (mDrawerLayout.isDrawerOpen(Gravity.LEFT) == false) {
+            mDrawerLayout.openDrawer(Gravity.LEFT);
+        } else {
+            mDrawerLayout.closeDrawer(Gravity.LEFT);
+        }
+    }
+
+    public static void data1() {
+        if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT) == false) {
+            mDrawerLayout.openDrawer(Gravity.RIGHT);
+        } else {
+            mDrawerLayout.closeDrawer(Gravity.RIGHT);
         }
     }
 }

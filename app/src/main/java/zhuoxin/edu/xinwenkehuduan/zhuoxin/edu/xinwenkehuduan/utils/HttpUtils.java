@@ -63,8 +63,6 @@ public class HttpUtils {
                 map.put("uid",name);
                 map.put("pwd",password);
                 map.put("device","0");
-
-
                 return map;
             }
         };

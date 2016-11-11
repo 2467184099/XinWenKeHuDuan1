@@ -36,11 +36,12 @@
 
         <ImageView
             android:id="@+id/img_useractivit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:src="@mipmap/userbg" />
+            android:layout_marginLeft="10dp"
+           android:src="@mipmap/userbg" />
 
         <LinearLayout
             android:layout_width="0dp"

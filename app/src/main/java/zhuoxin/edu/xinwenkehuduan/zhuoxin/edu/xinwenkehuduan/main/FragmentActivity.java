@@ -74,10 +74,12 @@ public class FragmentActivity extends AppCompatActivity implements View.OnClickL
             case R.id.img_left1:
                 Intent intent = new Intent(FragmentActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.img_right1:
                 Intent intent1 = new Intent(FragmentActivity.this, MainActivity.class);
                 startActivity(intent1);
+                finish();
                 break;
 
         }

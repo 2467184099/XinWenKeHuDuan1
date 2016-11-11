@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static DrawerLayout mDrawerLayout;
     ImageView mImg_dark;
     TextView mText_rightfragment;
-    TextView mText_main;
+   public static TextView mText_main;
     LinearLayout mLyt_news;
 
 

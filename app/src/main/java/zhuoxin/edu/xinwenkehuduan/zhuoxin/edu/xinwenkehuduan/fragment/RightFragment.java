@@ -18,6 +18,9 @@ import zhuoxin.edu.xinwenkehuduan.R;
 
 public class RightFragment extends Fragment implements View.OnClickListener{
     ImageView mImg;
+    ImageView mImg1;
+    ImageView mImg2;
+    ImageView mImg3;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -28,6 +31,9 @@ public class RightFragment extends Fragment implements View.OnClickListener{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mImg= (ImageView) view.findViewById(R.id.img_qq);
+        mImg1= (ImageView) view.findViewById(R.id.img_weixin);
+        mImg2= (ImageView) view.findViewById(R.id.img_weibo);
+        mImg3= (ImageView) view.findViewById(R.id.img_friends);
         mImg.setOnClickListener(this);
 
     }

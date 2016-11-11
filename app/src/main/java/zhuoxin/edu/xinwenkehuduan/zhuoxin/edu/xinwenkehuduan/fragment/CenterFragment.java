@@ -39,7 +39,7 @@ public class CenterFragment extends Fragment implements XListView.IXListViewList
     XListView mXlst;
     CenterAdapter mAdapter;
     android.os.Handler mHandler;
-    ArrayList<ChildInfo> mData;
+   static ArrayList<ChildInfo> mData;
     public static final String PATA = "http://118.244.212.82:9092/newsClient/news_list?ver=1&subid=1&dir=1&nid=1&stamp=20140321&cnt=20";
 
     @Nullable
@@ -133,9 +133,13 @@ public class CenterFragment extends Fragment implements XListView.IXListViewList
     //跳转页面
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String url = mData.get(position - 1).getLink();
+
         Intent intent = new Intent(getActivity(), WebActivity.class);
-        intent.putExtra("url", url);
+        intent.putExtra("position", position);
         startActivity(intent);
+    }
+
+    public static ArrayList<ChildInfo> getData() {
+        return mData;
     }
 }

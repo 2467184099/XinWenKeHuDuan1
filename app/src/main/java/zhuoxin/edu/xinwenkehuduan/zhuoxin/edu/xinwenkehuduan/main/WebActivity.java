@@ -9,10 +9,17 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import zhuoxin.edu.xinwenkehuduan.R;
+import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.entity.ChildInfo;
+import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.fragment.CenterFragment;
+import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.utils.SqlUtils;
 
 /**
  * Created by Administrator on 2016/11/1.
@@ -21,16 +28,18 @@ import zhuoxin.edu.xinwenkehuduan.R;
 public class WebActivity extends AppCompatActivity implements View.OnClickListener {
 
     WebView mWebView;
-    String mUrl;
+    int mPosition;
+    int mNid;
     ImageView mImg_back;
     ImageView mImg_news;
     PopupWindow mPopupWindow;
+    Button mBtn;
+    String link;
+    ArrayList<ChildInfo> mList = new ArrayList<>();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //接受传递过来的数据
-        Intent intent = this.getIntent();
-        mUrl = intent.getStringExtra("url");
         setContentView(R.layout.webactivity);
     }
 
@@ -39,9 +48,11 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
         super.onContentChanged();
         initData();
         webUrl();
-        mPopupWindow =new PopupWindow();
+        mPopupWindow = new PopupWindow();
         //设置view
-        View  view=this.getLayoutInflater().inflate(R.layout.popupwindow,null);
+        View view = this.getLayoutInflater().inflate(R.layout.popupwindow, null);
+        mBtn = (Button) view.findViewById(R.id.btn_popupwindow);
+        mBtn.setOnClickListener(this);
         mPopupWindow.setContentView(view);
         //设置宽高
         mPopupWindow.setWidth(100);
@@ -49,7 +60,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
         //设置焦点
         mPopupWindow.setFocusable(true);
         //设置点击取消
-        mPopupWindow.setOutsideTouchable(true );
+        mPopupWindow.setOutsideTouchable(true);
         //设置背景
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
 
@@ -67,8 +78,12 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
 
     //加载网页
     private void webUrl() {
+        //接受传递过来的数据
+        Intent intent = this.getIntent();
+        mPosition = intent.getIntExtra("position", -1);
+        mList = CenterFragment.getData();
         //加载网页
-        mWebView.loadUrl(mUrl);
+        mWebView.loadUrl(mList.get(mPosition-1).getLink());
         // 设置客户端的显示方式
         WebSettings settings = mWebView.getSettings();
         //使用JS代码 自动识别是手机端还是网页端
@@ -118,13 +133,33 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_back:
-                Intent intent = new Intent(WebActivity.this, MainActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(WebActivity.this, MainActivity.class);
+//                startActivity(intent);
+                WebActivity.this.finish();
                 break;
             case R.id.img_news:
                 mPopupWindow.showAsDropDown(v);
+                break;
+            case R.id.btn_popupwindow:
+                SqlUtils sqlUtils = new SqlUtils(this);
+                String summary = mList.get(mPosition - 1).getSummary();
+                String icon = mList.get(mPosition - 1).getIcon();
+                String stamp = mList.get(mPosition - 1).getStamp();
+                String title = mList.get(mPosition - 1).getTitle();
+                int nid = mList.get(mPosition - 1).getNid();
+                String link = mList.get(mPosition - 1).getLink();
+                int type = mList.get(mPosition - 1).getType();
+                ArrayList<ChildInfo> query = sqlUtils.query();
+                for (int i = 0; i < query.size(); i++) {
+                    if (nid == query.get(i).getNid()) {
+                        Toast.makeText(this, "请勿重复收藏", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-
+                }
+                sqlUtils.insert(summary, icon, stamp, title, nid, link, type);
+                Toast.makeText(this,"收藏成功，请去收藏页面查看",Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 }

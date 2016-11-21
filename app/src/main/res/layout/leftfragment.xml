@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@mipmap/c">
+    android:background="@mipmap/c"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/lyt_news"
@@ -85,7 +85,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/lyt_LOCAL"
+        android:id="@+id/lyt_CAMERA"
         android:layout_width="match_parent"
         android:layout_height="150dp"
 
@@ -94,10 +94,10 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_marginLeft="10dp"
-            android:src="@mipmap/biz_navigation_tab_local_news" />
+            android:src="@drawable/ic_camera_alt_black_24dp" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -115,7 +115,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="LOCAL"
+                android:text="CAMERA"
                 android:textColor="@color/colorAccent" />
         </LinearLayout>
     </LinearLayout>

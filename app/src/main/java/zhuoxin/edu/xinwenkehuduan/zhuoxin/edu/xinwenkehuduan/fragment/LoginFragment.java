@@ -1,6 +1,8 @@
 package zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -114,6 +116,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnL
         Log.e("----", "message=" + message);
         JSONObject jsonObject = null;
         try {
+            SharedPreferences shar=getActivity().getSharedPreferences("count", Context.MODE_PRIVATE);
+            SharedPreferences.Editor edit = shar.edit();
             jsonObject = new JSONObject(message);
             String message1 = jsonObject.getString("message");
             mStatus = jsonObject.getInt("status");
@@ -124,7 +128,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnL
             String token = data.getString("token");
             mExplain = data.getString("explain");
             Log.e("----", "mExplain============" + mExplain);
-
+            edit.putString("token",token);
+            edit.commit();
         } catch (JSONException e) {
             e.printStackTrace();
         }

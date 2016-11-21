@@ -5,37 +5,52 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 import zhuoxin.edu.xinwenkehuduan.R;
 import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.entity.ChildInfo;
+import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.entity.HttpInfo;
 import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.fragment.CenterFragment;
+import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.inter.OnLoadRegisterListener;
+import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.utils.HttpUtils;
 import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.utils.SqlUtils;
 
 /**
  * Created by Administrator on 2016/11/1.
  */
 
-public class WebActivity extends AppCompatActivity implements View.OnClickListener {
+public class WebActivity extends AppCompatActivity implements View.OnClickListener, OnLoadRegisterListener {
 
     WebView mWebView;
     int mPosition;
-    int mNid;
     ImageView mImg_back;
     ImageView mImg_news;
     PopupWindow mPopupWindow;
     Button mBtn;
-    String link;
+    Button mBtn1;
     ArrayList<ChildInfo> mList = new ArrayList<>();
+    TextView mTxt;
+    RequestQueue mRequestQueue;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,32 +63,42 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
         super.onContentChanged();
         initData();
         webUrl();
+        popupWindow();
+        mRequestQueue = Volley.newRequestQueue(this);
+        HttpUtils.connectionGET(HttpInfo.BASE_URL + HttpInfo.COMMENTNUM_URL + "ver=1&nid=" + mList.get(mPosition - 1).getNid(), this, mRequestQueue);
+    }
+
+    //popupWindow
+    private void popupWindow() {
         mPopupWindow = new PopupWindow();
         //设置view
         View view = this.getLayoutInflater().inflate(R.layout.popupwindow, null);
         mBtn = (Button) view.findViewById(R.id.btn_popupwindow);
+        mBtn1 = (Button) view.findViewById(R.id.btn_popupwindow_1);
+        mBtn1.setOnClickListener(this);
         mBtn.setOnClickListener(this);
         mPopupWindow.setContentView(view);
         //设置宽高
-        mPopupWindow.setWidth(100);
-        mPopupWindow.setHeight(50);
+        mPopupWindow.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
+        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
         //设置焦点
         mPopupWindow.setFocusable(true);
         //设置点击取消
         mPopupWindow.setOutsideTouchable(true);
         //设置背景
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-
-
     }
+
 
     //加载控件
     private void initData() {
         mWebView = (WebView) findViewById(R.id.web_webactivity);
         mImg_back = (ImageView) findViewById(R.id.img_back);
         mImg_news = (ImageView) findViewById(R.id.img_news);
+        mTxt = (TextView) findViewById(R.id.txt_4);
         mImg_back.setOnClickListener(this);
         mImg_news.setOnClickListener(this);
+        mTxt.setOnClickListener(this);
     }
 
     //加载网页
@@ -83,7 +108,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
         mPosition = intent.getIntExtra("position", -1);
         mList = CenterFragment.getData();
         //加载网页
-        mWebView.loadUrl(mList.get(mPosition-1).getLink());
+        mWebView.loadUrl(mList.get(mPosition - 1).getLink());
         // 设置客户端的显示方式
         WebSettings settings = mWebView.getSettings();
         //使用JS代码 自动识别是手机端还是网页端
@@ -116,6 +141,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 return super.shouldOverrideUrlLoading(view, url);
             }
         });
+
     }
 
 
@@ -128,13 +154,11 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
         return super.onKeyDown(keyCode, event);
     }*/
 
-
+    //点击事件
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_back:
-//                Intent intent = new Intent(WebActivity.this, MainActivity.class);
-//                startActivity(intent);
                 WebActivity.this.finish();
                 break;
             case R.id.img_news:
@@ -158,8 +182,40 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
 
                 }
                 sqlUtils.insert(summary, icon, stamp, title, nid, link, type);
-                Toast.makeText(this,"收藏成功，请去收藏页面查看",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "收藏成功，请去收藏页面查看", Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.btn_popupwindow_1:
+                ShareSDK.initSDK(this);
+                OnekeyShare onekeyShare = new OnekeyShare();
+                //关闭sso授权
+                onekeyShare.disableSSOWhenAuthorize();
+                onekeyShare.setTitle(mList.get(mPosition - 1).getTitle());
+                onekeyShare.setTitleUrl(mList.get(mPosition - 1).getLink());
+                onekeyShare.setText(mList.get(mPosition - 1).getSummary());
+                onekeyShare.show(this);
+                break;
+            case R.id.txt_4:
+                int nid1 = mList.get(mPosition - 1).getNid();
+                Intent intent = new Intent(WebActivity.this, CommentActivity.class);
+                intent.putExtra("nid", nid1);
+                startActivity(intent);
+                break;
+
+        }
+    }
+
+
+    @Override
+    public void getRegister(String message) {
+        Log.e("------", message);
+        try {
+            JSONObject jsonObject = new JSONObject(message);
+            String message1 = jsonObject.getString("message");
+            int status = jsonObject.getInt("status");
+            int data = jsonObject.getInt("data");
+            mTxt.setText(data+"跟帖");
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 }

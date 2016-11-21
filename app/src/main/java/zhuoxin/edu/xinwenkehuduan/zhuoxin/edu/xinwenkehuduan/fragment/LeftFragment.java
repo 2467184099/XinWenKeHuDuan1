@@ -19,10 +19,11 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.main.MainActivity;
 
 public class LeftFragment extends Fragment implements View.OnClickListener {
     LinearLayout mLyt_favdrite;
-    LinearLayout mLyt_LOCAL;
+    LinearLayout  mLyt_CAMERA;
     LinearLayout mLyt_COMMENT;
     LinearLayout mLyt_PHOTO;
     FavdriteFragment mFavdriteFragment;
+    CameraFragment mCameraFragment;
 
     @Nullable
     @Override
@@ -34,11 +35,13 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mLyt_favdrite = (LinearLayout) view.findViewById(R.id.lyt_favdrite);
-        mLyt_LOCAL = (LinearLayout) view.findViewById(R.id.lyt_LOCAL);
+        mLyt_CAMERA = (LinearLayout) view.findViewById(R.id.lyt_CAMERA);
         mLyt_COMMENT = (LinearLayout) view.findViewById(R.id.lyt_COMMENT);
         mLyt_PHOTO = (LinearLayout) view.findViewById(R.id.lyt_PHOTO);
         mLyt_favdrite.setOnClickListener(this);
+        mLyt_CAMERA.setOnClickListener(this);
         mFavdriteFragment = new FavdriteFragment();
+         mCameraFragment =new CameraFragment();
     }
 
     @Override
@@ -51,6 +54,14 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
                 fragmentTransaction.commit();
                 MainActivity.data();
                 MainActivity.mText_main.setText("收藏新闻");
+                break;
+            case R.id.lyt_CAMERA:
+                FragmentManager Manager1 = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction1 = Manager1.beginTransaction();
+                fragmentTransaction1.replace(R.id.lyt_center,mCameraFragment);
+                fragmentTransaction1.commit();
+                MainActivity.data();
+                MainActivity.mText_main.setText("自定义照相机");
                 break;
 
         }

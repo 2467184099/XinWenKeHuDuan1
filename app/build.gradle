@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 
+
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
@@ -43,4 +44,8 @@ dependencies {
     compile files('libs/ShareSDK-SinaWeibo-2.7.9.jar')
     compile files('libs/ShareSDK-Wechat-2.7.9.jar')
     compile files('libs/ShareSDK-Wechat-Core-2.7.9.jar')
+    compile 'com.android.support:recyclerview-v7:23.0.0'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
 }

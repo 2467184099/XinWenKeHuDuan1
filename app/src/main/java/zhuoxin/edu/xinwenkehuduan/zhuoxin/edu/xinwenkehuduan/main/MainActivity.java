@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mImg_right.setOnClickListener(this);
     }
 
-    //打开菜单
+    //打开菜单点击事件
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -82,7 +82,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mDrawerLayout.openDrawer(Gravity.LEFT);
                 } else {
                     mDrawerLayout.closeDrawer(Gravity.LEFT);
-                }
+                }if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)==true){
+                mDrawerLayout.closeDrawer(Gravity.RIGHT);
+            }
+
                 break;
             case R.id.img_right:
 
@@ -91,7 +94,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 } else {
                     mDrawerLayout.closeDrawer(Gravity.RIGHT);
-                }
+                }if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)==true){
+                mDrawerLayout.closeDrawer(Gravity.LEFT);}
                 break;
             case R.id.img_dark:
                /* FragmentManager Manager = getSupportFragmentManager();

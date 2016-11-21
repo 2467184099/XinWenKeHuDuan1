@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="zhuoxin.edu.xinwenkehuduan">
 
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -37,6 +40,11 @@
         <activity android:name=".zhuoxin.edu.xinwenkehuduan.main.WebActivity"></activity>
         <activity android:name=".zhuoxin.edu.xinwenkehuduan.main.FragmentActivity"></activity>
         <activity android:name=".zhuoxin.edu.xinwenkehuduan.main.UserActivity"></activity>
+        <activity android:name=".zhuoxin.edu.xinwenkehuduan.main.FavdriteShowActivity"></activity>
+        <activity
+            android:name=".zhuoxin.edu.xinwenkehuduan.main.CameraShowActivity"
+            android:theme="@style/Theme.AppCompat.Dialog"></activity>
+        <activity android:name=".zhuoxin.edu.xinwenkehuduan.main.CommentActivity"></activity>
         <activity
             android:name="com.mob.tools.MobUIShell"
             android:configChanges="keyboardHidden|orientation|screenSize"

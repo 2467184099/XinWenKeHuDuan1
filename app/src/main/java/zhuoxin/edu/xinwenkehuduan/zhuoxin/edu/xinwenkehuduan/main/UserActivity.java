@@ -2,6 +2,7 @@ package zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.main;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,15 +23,30 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import zhuoxin.edu.xinwenkehuduan.R;
+import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.adapter.UserAdapter;
+import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.entity.HttpInfo;
+import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.entity.LoginlogInfo;
+import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.inter.OnLoadRegisterListener;
+import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.utils.HttpUtils;
 
 /**
  * Created by Administrator on 2016/10/31.
  */
 
-public class UserActivity extends AppCompatActivity implements View.OnClickListener {
+public class UserActivity extends AppCompatActivity implements View.OnClickListener, OnLoadRegisterListener {
     ImageView mBack;
     ImageView mImg_useractivity;
     Button mBtn;
@@ -38,16 +54,14 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     TextView mText2;
     TextView mText3;
     ListView mLst;
-    String mName;
     LinearLayout mLyt_take;
     LinearLayout mLyt_sel;
     PopupWindow mPopupWindow;
-
+    RequestQueue mRequestQueue;
+    String mToken;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = this.getIntent();
-        mName = intent.getStringExtra("name");
         setContentView(R.layout.useractivity);
     }
 
@@ -55,6 +69,51 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     public void onContentChanged() {
         super.onContentChanged();
         initView();
+        popupwindow();
+        volley();
+    }
+
+    private void volley() {
+        mRequestQueue = Volley.newRequestQueue(this);
+        SharedPreferences count = this.getSharedPreferences("count", MODE_PRIVATE);
+        mToken = count.getString("token", null);
+        HttpUtils.connectionGET(HttpInfo.BASE_URL+HttpInfo.USER_URL+"ver="+1+"&imei="+0+"&token="+mToken,this,mRequestQueue);
+    }
+
+    ArrayList<LoginlogInfo> mList;
+    String mUid;
+    int mIntegration;
+    @Override
+    public void getRegister(String message) {
+        Log.e("=======","message==="+message);
+        try {
+            JSONObject jsonObject=new JSONObject(message);
+            JSONObject data = jsonObject.getJSONObject("data");
+            mUid = data.getString("uid");
+            mText1.setText(mUid);
+            mIntegration = data.getInt("integration");
+            String loginlog = data.getString("loginlog");
+            Log.e("======","loginlog===="+loginlog);
+            Gson gson=new Gson();
+            Type type = new TypeToken<ArrayList<LoginlogInfo>>() {
+            }.getType();
+            mList =gson.fromJson(loginlog,type);
+            adapter();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void adapter() {
+        UserAdapter adapter=new UserAdapter(UserActivity.this);
+        adapter.setData(mList);
+        mLst.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
+
+
+    private void popupwindow() {
         mPopupWindow = new PopupWindow();
         View view = this.getLayoutInflater().inflate(R.layout.popupwindow1, null);
         mPopupWindow.setContentView(view);
@@ -78,7 +137,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         mText2 = (TextView) findViewById(R.id.txt_2);
         mText3 = (TextView) findViewById(R.id.txt_3);
         mLst = (ListView) findViewById(R.id.lst_useractivity);
-        mText1.setText(mName);
         mImg_useractivity.setOnClickListener(this);
         mBtn.setOnClickListener(this);
         mBack.setOnClickListener(this);
@@ -96,6 +154,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_useractivity:
                 startActivity(new Intent(UserActivity.this, FragmentActivity.class));
+                finish();
                 break;
             case R.id.img_useractivit:
                 mPopupWindow.showAtLocation(getLayoutInflater().inflate(R.layout.popupwindow1, null), Gravity.BOTTOM, 0, 0);
@@ -133,7 +192,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("======","data="+data);
+        Log.e("======", "mData=" + data);
         Log.e("------", "resultCode=" + resultCode);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
@@ -141,7 +200,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                     //cropFromFile(file);
                     Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
                     mImg_useractivity.setImageBitmap(bitmap);
-                    /*Bitmap bitmap   = data.getParcelableExtra("data");
+                    /*Bitmap bitmap   = mData.getParcelableExtra("mData");
                     mImg_useractivit y.setImageBitmap(bitmap);*/
                     break;
                 }
@@ -158,11 +217,11 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                     cursor.close();
                     Bitmap bitmap = BitmapFactory.decodeFile(path);
                     mImg_useractivity.setImageBitmap(bitmap);
-                   // crop(data.getData());
+                    // crop(mData.getData());
                     break;
                 }
                 case 3: {
-                    Bitmap bitmap= data.getParcelableExtra("data");
+                    Bitmap bitmap = data.getParcelableExtra("mData");
                     mImg_useractivity.setImageBitmap(bitmap);
                     break;
                 }
@@ -188,7 +247,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         intent.putExtra("outputX", 200);
         intent.putExtra("outputY", 200);
         //设置剪切圆形图片
-      intent.putExtra("circleCrop","true");
+        intent.putExtra("circleCrop", "true");
         //设置返回数据
         intent.putExtra("return_data", true);
         //启动
@@ -213,7 +272,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         intent.putExtra("outputX", 200);
         intent.putExtra("outputY", 200);
         //设置剪切圆形图片
-   intent.putExtra("circleCrop","true");
+        intent.putExtra("circleCrop", "true");
         //设置返回数据
         intent.putExtra("return_data", true);
         //启动
@@ -221,4 +280,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
+
+
 }

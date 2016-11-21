@@ -1,6 +1,5 @@
 package zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -39,13 +38,11 @@ public class FragmentActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onContentChanged() {
-        super.onContentChanged();
-        mVip = (ViewPager) findViewById(R.id.mvp);
-        mImg1 = (ImageView) findViewById(R.id.img_left1);
-        mImg2 = (ImageView) findViewById(R.id.img_right1);
-        mText = (TextView) findViewById(R.id.txt_main1);
-        mImg1.setOnClickListener(this);
-        mImg2.setOnClickListener(this);
+        initView();
+        viewPager();
+    }
+        //viewpager的数据源
+    private void viewPager() {
         LoginFragment loginFragment = new LoginFragment();
         RegisterFragment registerFragment = new RegisterFragment();
         ForgetFragment forgetFragment = new ForgetFragment();
@@ -57,7 +54,18 @@ public class FragmentActivity extends AppCompatActivity implements View.OnClickL
         mVip.setAdapter(fragmentAdapter);
         fragmentAdapter.notifyDataSetChanged();
     }
-    
+
+    //初始化view
+    private void initView() {
+        super.onContentChanged();
+        mVip = (ViewPager) findViewById(R.id.mvp);
+        mImg1 = (ImageView) findViewById(R.id.img_left1);
+        mImg2 = (ImageView) findViewById(R.id.img_right1);
+        mText = (TextView) findViewById(R.id.txt_main1);
+        mImg1.setOnClickListener(this);
+        mImg2.setOnClickListener(this);
+    }
+
     public void register() {
         mVip.setCurrentItem(mVip.getCurrentItem() + 1);
         mText.setText("用户注册");
@@ -67,19 +75,15 @@ public class FragmentActivity extends AppCompatActivity implements View.OnClickL
         mVip.setCurrentItem(mVip.getCurrentItem() + 2);
         mText.setText("忘记密码");
     }
-
+ //点击事件
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_left1:
-                Intent intent = new Intent(FragmentActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                FragmentActivity.this.finish();
                 break;
             case R.id.img_right1:
-                Intent intent1 = new Intent(FragmentActivity.this, MainActivity.class);
-                startActivity(intent1);
-                finish();
+                FragmentActivity.this.finish();
                 break;
 
         }

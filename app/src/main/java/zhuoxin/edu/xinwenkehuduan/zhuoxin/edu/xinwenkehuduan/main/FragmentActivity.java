@@ -20,7 +20,9 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.fragment.RegisterFr
 /**
  * Created by Administrator on 2016/11/4.
  */
-
+/*
+* viewpager界面
+* */
 public class FragmentActivity extends AppCompatActivity implements View.OnClickListener {
     ViewPager mVip;
     ArrayList<Fragment> mList;
@@ -75,15 +77,22 @@ public class FragmentActivity extends AppCompatActivity implements View.OnClickL
         mVip.setCurrentItem(mVip.getCurrentItem() + 2);
         mText.setText("忘记密码");
     }
+    public void login(){
+        mVip.setCurrentItem(mVip.getCurrentItem() -1);
+        mText.setText("用户登陆");
+    }
+
  //点击事件
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_left1:
                 FragmentActivity.this.finish();
+                MainActivity.data2();
                 break;
             case R.id.img_right1:
                 FragmentActivity.this.finish();
+                MainActivity.data2();
                 break;
 
         }

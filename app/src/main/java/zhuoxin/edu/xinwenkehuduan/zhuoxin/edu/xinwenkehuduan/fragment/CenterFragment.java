@@ -1,9 +1,13 @@
 package zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,22 +29,26 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.adapter.CenterAdapt
 import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.entity.ChildInfo;
 import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.entity.GroupInfo;
 import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.inter.OnLoadNewcustomLlister;
+import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.main.MainActivity;
 import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.main.WebActivity;
 import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.utils.NewcustomTask;
 
 /**
  * Created by Administrator on 2016/10/28.
  */
-
-public class CenterFragment extends Fragment implements XListView.IXListViewListener, OnLoadNewcustomLlister, AdapterView.OnItemClickListener,View.OnClickListener{
+/*
+* 新闻列表
+* */
+public class CenterFragment extends Fragment implements XListView.IXListViewListener, OnLoadNewcustomLlister, AdapterView.OnItemClickListener, View.OnClickListener {
     TextView mText1;
     TextView mText2;
     ImageView mImg;
     XListView mXlst;
     CenterAdapter mAdapter;
     android.os.Handler mHandler;
-   static ArrayList<ChildInfo> mData;
-    SocietyFragment mSocietyFragment;
+    static ArrayList<ChildInfo> mData;
+    typemoreFragment mFragment;
+    String mTitle;
     public static final String PATA = "http://118.244.212.82:9092/newsClient/news_list?ver=1&subid=1&dir=1&nid=1&stamp=20140321&cnt=20";
 
     @Nullable
@@ -66,7 +74,8 @@ public class CenterFragment extends Fragment implements XListView.IXListViewList
         mXlst = (XListView) view.findViewById(R.id.xlst_center);
         mXlst.setOnItemClickListener(this);
         mText2.setOnClickListener(this);
-        mSocietyFragment=new SocietyFragment();
+        mImg.setOnClickListener(this);
+        mFragment = new typemoreFragment();
     }
 
     //启动异步
@@ -80,12 +89,16 @@ public class CenterFragment extends Fragment implements XListView.IXListViewList
     //实现接口 重写的方法·
     @Override
     public void OnLoadNewcustomLlister(String string) {
-        // Log.e("=====", "String=" + string);
+         Log.e("=====", "String=" + string);
         Gson gson = new Gson();
         GroupInfo info = gson.fromJson(string, new TypeToken<GroupInfo>() {
         }.getType());
         mData = info.getData();
-        Log.e("==", "data==" + mData);
+        SharedPreferences shar=getActivity().getSharedPreferences("center", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = shar.edit();
+        edit.putString("title",mTitle);
+        edit.commit();
+        //Log.e("==", "mData==" + mData);
         mAdapter = new CenterAdapter(getContext());
         mAdapter.setData(mData);
         mXlst.setAdapter(mAdapter);
@@ -146,14 +159,15 @@ public class CenterFragment extends Fragment implements XListView.IXListViewList
 
     @Override
     public void onClick(View v) {
-       switch (v.getId()){
-           case R.id.txt2_center:{
-              /* FragmentManager Manager = getActivity().getSupportFragmentManager();
-               FragmentTransaction fragmentTransaction = Manager.beginTransaction();
-               fragmentTransaction.replace(R.id.lyt_center,mSocietyFragment);
-               fragmentTransaction.commit();*/
-           }
-           break;
-       }
+        switch (v.getId()) {
+            case R.id.img_center: {
+                FragmentManager Manager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = Manager.beginTransaction();
+                fragmentTransaction.replace(R.id.lyt_center, mFragment);
+                fragmentTransaction.commit();
+                MainActivity.mText_main.setText("分类");
+            }
+            break;
+        }
     }
 }

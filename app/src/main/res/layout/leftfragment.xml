@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/lyt_news"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="wrap_content"
         android:clickable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -17,6 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -51,8 +52,8 @@
     <LinearLayout
         android:id="@+id/lyt_favdrite"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:clickable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -87,8 +88,8 @@
     <LinearLayout
         android:id="@+id/lyt_CAMERA"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:clickable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -123,9 +124,9 @@
     <LinearLayout
         android:id="@+id/lyt_COMMENT"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-
+        android:layout_height="wrap_content"
         android:clickable="true"
+        android:layout_marginTop="30dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -159,8 +160,8 @@
     <LinearLayout
         android:id="@+id/lyt_PHOTO"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-
+        android:layout_height="wrap_content"
+         android:layout_marginTop="30dp"
         android:clickable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal">

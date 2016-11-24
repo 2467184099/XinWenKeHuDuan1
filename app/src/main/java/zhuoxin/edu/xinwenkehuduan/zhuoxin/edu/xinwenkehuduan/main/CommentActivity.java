@@ -42,10 +42,14 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.entity.ChildCInfo;
 import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.entity.HttpInfo;
 import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.inter.OnLoadRegisterListener;
 import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.utils.HttpUtils;
+import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.utils.MySqlUtils;
 
 /**
  * Created by Administrator on 2016/11/15.
  */
+/*
+* 评论界面
+* */
 
 public class CommentActivity extends AppCompatActivity implements OnLoadRegisterListener, XListView.IXListViewListener, View.OnClickListener {
     int mNid;
@@ -57,7 +61,9 @@ public class CommentActivity extends AppCompatActivity implements OnLoadRegister
     ArrayList<ChildCInfo> mData, mlist;
     CommentAdapter mCommentAdapter;
     int mCid;
-     Handler mHandler;
+    Handler mHandler;
+    String mStamp;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +74,7 @@ public class CommentActivity extends AppCompatActivity implements OnLoadRegister
     public void onContentChanged() {
         super.onContentChanged();
         mlist = new ArrayList<>();
-        mHandler=new Handler();
+        mHandler = new Handler();
         inter();
         initView();
         mCommentAdapter = new CommentAdapter(CommentActivity.this);
@@ -101,7 +107,6 @@ public class CommentActivity extends AppCompatActivity implements OnLoadRegister
     }
 
 
-
     @Override
     public void getRegister(String message) {
         Log.e("------", "" + message);
@@ -111,6 +116,8 @@ public class CommentActivity extends AppCompatActivity implements OnLoadRegister
         mData = info.getData();
         for (int i = 0; i < mData.size(); i++) {
             mCid = mData.get(i).getCid();
+            mStamp = mData.get(i).getStamp();
+            Log.e("====", mStamp.toString());
         }
         mlist.addAll(mData);
         //设置两个方法
@@ -157,10 +164,12 @@ public class CommentActivity extends AppCompatActivity implements OnLoadRegister
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         mXlst.setRefreshTime(dateFormat.format(new Date(System.currentTimeMillis())));
     }
+
     OkHttpClient mOkHttpClient;
     String mToken;
     String string;
     Handler handler1;
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -169,30 +178,39 @@ public class CommentActivity extends AppCompatActivity implements OnLoadRegister
             }
             break;
             case R.id.img_comment: {
+                MySqlUtils mySqlUtils = new MySqlUtils(this);
                 String ctx = mEtxt.getText().toString();
+                SharedPreferences person = this.getSharedPreferences("person", MODE_PRIVATE);
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SharedPreferences web = this.getSharedPreferences("web", MODE_PRIVATE);
+                String title = web.getString("title", null);
+                String uid = person.getString("uid", null);
+                String stamp = format.format(new Date(System.currentTimeMillis()));
+                mySqlUtils.insert(title, uid, stamp, ctx);
+
                 SharedPreferences count = this.getSharedPreferences("count", MODE_PRIVATE);
                 mToken = count.getString("token", null);
                 Log.e("============", "token==" + mToken);
-                mOkHttpClient =new OkHttpClient();
+                mOkHttpClient = new OkHttpClient();
                 //构造器模式，构造请求
-                FormBody.Builder builder=new FormBody.Builder();
-                builder.add("ver","1");
-                builder.add("nid",mNid+"");
-                builder.add("token",mToken);
-                builder.add("imei","0");
-                builder.add("ctx",ctx);
+                FormBody.Builder builder = new FormBody.Builder();
+                builder.add("ver", "1");
+                builder.add("nid", mNid + "");
+                builder.add("token", mToken);
+                builder.add("imei", "0");
+                builder.add("ctx", ctx);
                 //获取请求体
                 RequestBody requestBody = builder.build();
-                Request.Builder requestbuilder=new Request.Builder();
+                Request.Builder requestbuilder = new Request.Builder();
                 //通过构造器构建请求
-                requestbuilder.url(HttpInfo.BASE_URL+HttpInfo.CMT_URL);
+                requestbuilder.url(HttpInfo.BASE_URL + HttpInfo.CMT_URL);
 
                 //使用构造器   将请球体放入请求中
                 requestbuilder.post(requestBody);
                 //构建请求
                 Request request = requestbuilder.build();
                 //获取call模型
-                Call call=mOkHttpClient.newCall(request);
+                Call call = mOkHttpClient.newCall(request);
                 //执行请求
                 call.enqueue(new Callback() {
                     @Override
@@ -202,27 +220,27 @@ public class CommentActivity extends AppCompatActivity implements OnLoadRegister
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                       //响应体
-                        ResponseBody responseBody=response.body();
+                        //响应体
+                        ResponseBody responseBody = response.body();
                         string = responseBody.string();
                         handler1.sendEmptyMessage(1);
 
                     }
                 });
-                handler1=new Handler(){
+                handler1 = new Handler() {
                     @Override
                     public void handleMessage(Message msg) {
                         super.handleMessage(msg);
-                        Log.e("-------","string=="+string);
+                        Log.e("-------", "string==" + string);
                         try {
-                            JSONObject jsonObject=new JSONObject(string);
+                            JSONObject jsonObject = new JSONObject(string);
                             String message = jsonObject.getString("message");
                             int status = jsonObject.getInt("status");
                             JSONObject data = jsonObject.getJSONObject("data");
                             int result = data.getInt("result");
                             String explain = data.getString("explain");
-                            if (status==0) {
-                                Toast.makeText(CommentActivity.this,explain,Toast.LENGTH_SHORT).show();
+                            if (status == 0) {
+                                Toast.makeText(CommentActivity.this, explain, Toast.LENGTH_SHORT).show();
                                 mEtxt.setText("");
                             }
                         } catch (JSONException e) {

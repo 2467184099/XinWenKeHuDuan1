@@ -11,7 +11,9 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.entity.LoginlogInfo
 /**
  * Created by Administrator on 2016/11/21.
  */
-
+/*
+* 用户中心适配器
+* */
 public class UserAdapter extends BaseAdapter<LoginlogInfo> {
     public UserAdapter(Context context) {
         super(context);

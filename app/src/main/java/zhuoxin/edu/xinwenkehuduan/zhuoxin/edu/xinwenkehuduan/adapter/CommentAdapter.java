@@ -14,6 +14,9 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.entity.ChildCInfo;
 /**
  * Created by Administrator on 2016/11/18.
  */
+/*
+* 评论适配器
+* */
 
 public class CommentAdapter extends BaseAdapter<ChildCInfo> {
     public CommentAdapter(Context context) {

@@ -13,7 +13,9 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.inter.OnLoadNewcust
 /**
  * Created by Administrator on 2016/10/31.
  */
-
+/*
+* 异步
+* */
 public class NewcustomTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPreExecute() {

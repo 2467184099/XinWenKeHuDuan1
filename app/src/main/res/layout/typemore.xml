@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/baby"
+    android:orientation="vertical"
+    android:background="@mipmap/c"
     android:gravity="center">
-
-    <ImageView
-        android:id="@+id/img_logo"
+    <TextView
+        android:id="@+id/txt_typemore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-       android:layout_margin="80dp"
-        android:src="@mipmap/logo"
-       />
-
+        android:gravity="center"
+        android:text="完善中，敬请期待"
+        android:textColor="#ff0000"
+        android:textSize="20sp"/>
 </LinearLayout>

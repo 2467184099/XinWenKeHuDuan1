@@ -9,7 +9,6 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 
@@ -22,10 +21,12 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.utils.SqlUtils;
 
 /**
  * Created by Administrator on 2016/11/10.
- */
+ *//*
+ * 收藏新闻   瀑布流
+ * */
 
 public class FavdriteFragment extends Fragment  {
-    ListView mLst;
+    //ListView mLst;
     ArrayList<ChildInfo> mList ;
     RecyclerView mRecycler;
 

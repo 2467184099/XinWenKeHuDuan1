@@ -14,7 +14,9 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.entity.ChildInfo;
 /**
  * Created by Administrator on 2016/10/31.
  */
-
+/*
+* 主界面适配器
+* */
 public class CenterAdapter extends BaseAdapter<ChildInfo> {
     public CenterAdapter(Context context) {
         super(context);

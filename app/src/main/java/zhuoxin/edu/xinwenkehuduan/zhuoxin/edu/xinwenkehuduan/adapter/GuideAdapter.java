@@ -8,7 +8,9 @@ import android.widget.ImageView;
 /**
  * Created by Administrator on 2016/10/27.
  */
-
+/*
+* 引导界面适配器
+* */
 public class GuideAdapter extends PagerAdapter {
     ImageView [] mStr;
     public GuideAdapter(ImageView [] mStr){

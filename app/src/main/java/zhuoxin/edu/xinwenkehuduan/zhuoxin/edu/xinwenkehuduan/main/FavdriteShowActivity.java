@@ -24,7 +24,10 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.utils.SqlUtils;
 /**
  * Created by Administrator on 2016/11/14.
  */
-
+ /*
+ * 取消收藏
+ *
+ * */
 public class FavdriteShowActivity extends AppCompatActivity implements View.OnClickListener {
     int mPosition;
     WebView mWeb;

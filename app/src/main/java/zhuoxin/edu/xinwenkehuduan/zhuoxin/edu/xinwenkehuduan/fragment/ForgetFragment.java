@@ -12,6 +12,10 @@ import zhuoxin.edu.xinwenkehuduan.R;
 /**
  * Created by Administrator on 2016/11/2.
  */
+/*
+* 忘记密码
+*
+* */
 
 public class ForgetFragment extends Fragment{
     @Nullable

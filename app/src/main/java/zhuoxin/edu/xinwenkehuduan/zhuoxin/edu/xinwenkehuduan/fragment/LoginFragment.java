@@ -30,7 +30,10 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.utils.HttpUtils;
 /**
  * Created by Administrator on 2016/10/28.
  */
-
+/*
+* 登陆界面
+*
+* */
 public class LoginFragment extends Fragment implements View.OnClickListener, OnLoadRegisterListener {
     Button mBtn1;
     Button mBtn2;
@@ -64,6 +67,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnL
         mRequestQueue = Volley.newRequestQueue(getActivity());
     }
 
+
     @Override
     public void onClick(View v) {
 
@@ -74,7 +78,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnL
                 fragmentTransaction.replace(R.id.lyt_center, mRegisterFragment);
                 fragmentTransaction.commit();*/
                 ((FragmentActivity) getActivity()).register();
-
+                getActivity().finish();
                 break;
             case R.id.btn2:
                /* FragmentManager fragmentManager1 = getFragmentManager();
@@ -82,45 +86,42 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnL
                 fragmentTransaction1.replace(R.id.lyt_center, mForgetFragment);
                 fragmentTransaction1.commit();*/
                 ((FragmentActivity) getActivity()).forget();
+                getActivity().finish();
                 break;
             case R.id.btn3:
                 Log.e("----", "resule=" + mResult);
                 String name = mName.getText().toString();
                 String password = mPassword.getText().toString();
                 HttpUtils.connectionPOST(HttpInfo.BASE_URL + HttpInfo.LOGIN_URL, name, password, this, mRequestQueue);
-                switch (mStatus) {
-                    case -1:
-
-                        break;
-                    case 0:
-                        if (mResult == 0) {
-                            Intent intent = new Intent(getActivity(), UserActivity.class);
-                            intent.putExtra("name",name);
-                            startActivity(intent);
-                            Toast.makeText(getContext(),mExplain,Toast.LENGTH_SHORT).show();
-
-                        }
-
-                        break;
-                }
                 break;
         }
     }
 
-    int mStatus=-1;
-    int mResult=-1;
+    static int mStatus;
+    int mResult ;
     String mExplain;
-
     @Override
     public void getRegister(String message) {
         Log.e("----", "message=" + message);
         JSONObject jsonObject = null;
         try {
-            SharedPreferences shar=getActivity().getSharedPreferences("count", Context.MODE_PRIVATE);
+            SharedPreferences shar = getActivity().getSharedPreferences("count", Context.MODE_PRIVATE);
             SharedPreferences.Editor edit = shar.edit();
             jsonObject = new JSONObject(message);
             String message1 = jsonObject.getString("message");
             mStatus = jsonObject.getInt("status");
+            edit.putInt("status",mStatus);
+            int status = shar.getInt("status", 0);
+            Log.e("====","status==="+status);
+            if (mStatus==0){
+                Intent intent = new Intent(getActivity(), UserActivity.class);
+                startActivity(intent);
+                Toast.makeText(getContext(), "登录成功", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(getContext(), "用户名或密码错误！请重新输入", Toast.LENGTH_SHORT).show();
+                mName.setText("");
+                mPassword.setText("");
+            }
             Log.e("----", "mStatus============" + mStatus);
             JSONObject data = jsonObject.getJSONObject("data");
             mResult = data.getInt("result");
@@ -128,11 +129,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnL
             String token = data.getString("token");
             mExplain = data.getString("explain");
             Log.e("----", "mExplain============" + mExplain);
-            edit.putString("token",token);
+            edit.putString("token", token);
+            edit.putInt("result",mResult);
             edit.commit();
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
+
+
 
 }

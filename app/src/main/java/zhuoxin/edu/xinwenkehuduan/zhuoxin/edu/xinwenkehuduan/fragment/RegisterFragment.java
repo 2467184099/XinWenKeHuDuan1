@@ -1,7 +1,5 @@
 package zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.fragment;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,12 +23,15 @@ import java.util.regex.Pattern;
 import zhuoxin.edu.xinwenkehuduan.R;
 import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.entity.HttpInfo;
 import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.inter.OnLoadRegisterListener;
+import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.main.FragmentActivity;
 import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.utils.HttpUtils;
 
 /**
  * Created by Administrator on 2016/11/2.
  */
-
+/*
+* 注册界面
+* */
 public class RegisterFragment extends Fragment implements View.OnClickListener, OnLoadRegisterListener {
     EditText mEmail;
     EditText mName;
@@ -38,7 +39,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
     Button mBtn;
     CheckBox mChb;
     RequestQueue mRequestQueue;
-    public static final String sPREFC_NAME = "register";
+
 
     @Nullable
     @Override
@@ -66,7 +67,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
         String email = mEmail.getText().toString();
         String name = mName.getText().toString();
         String password = mPassword.getText().toString();
-        boolean a = Pattern.matches("\\w{5,20}@\\w{2,10}.com", email);
+        boolean a = Pattern.matches("\\w{5,20}@\\w{2,10}.[a-zA-Z]{2,6}", email);
         boolean b = Pattern.matches("[a-zA-Z]\\w{5,15}", name);
         boolean c = Pattern.matches("\\w{6,20}", password);
         if (a) {
@@ -74,7 +75,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                 if (c) {
                     if (mChb.isChecked()) {
                         HttpUtils.connectionGET(HttpInfo.BASE_URL + HttpInfo.REGISTER_URL + "ver=1&uid=" + name + "&email=" + email + "&pwd=" + password, this, mRequestQueue);
-                        Toast.makeText(getContext(),"注册成功",Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getActivity(), "是否接受协议", Toast.LENGTH_SHORT).show();
                     }
@@ -99,16 +99,20 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
             JSONObject jsonObject = new JSONObject(message);
             String message1 = jsonObject.getString("message");
             int status = jsonObject.getInt("status");
+
             JSONObject data = jsonObject.getJSONObject("data");
             int result = data.getInt("result");
             String token = data.getString("token");
             String explain = data.getString("explain");
-            SharedPreferences shar = getActivity().getSharedPreferences(sPREFC_NAME, Context.MODE_PRIVATE);
-            SharedPreferences.Editor edit = shar.edit();
-            edit.putInt("result", result);
-            edit.putString("token", token);
-            edit.putString("explain", explain);
-            edit.commit();
+            if (status==0){
+                Toast.makeText(getContext(),explain,Toast.LENGTH_SHORT).show();
+                if (result==0){
+                    ((FragmentActivity) getActivity()).login();
+                    getActivity().finish();
+                }
+            }else {
+               Toast.makeText(getContext(),"邮箱格式错误",Toast.LENGTH_SHORT).show();
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

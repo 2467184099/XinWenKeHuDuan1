@@ -15,7 +15,9 @@ import zhuoxin.edu.xinwenkehuduan.R;
 /**
  * Created by Administrator on 2016/10/27.
  */
-
+/*
+* logo界面
+* */
 public class LogoActivity extends AppCompatActivity {
     public static final String sPREFC_NAME = "bb";
     public static final String sIS_FIRST = "first";
@@ -44,7 +46,7 @@ public class LogoActivity extends AppCompatActivity {
             //设置执行状态
             AlphaAnimation alphaAnimation=new AlphaAnimation(0.1F,1.0F);
             //设置执行时间
-            alphaAnimation.setDuration(3000);
+            alphaAnimation.setDuration(1000);
             //设置执行次数
             alphaAnimation.setRepeatCount(1);
             //设置值型模式

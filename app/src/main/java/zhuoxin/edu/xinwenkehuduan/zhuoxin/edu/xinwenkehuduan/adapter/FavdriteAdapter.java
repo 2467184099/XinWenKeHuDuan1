@@ -19,7 +19,9 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.inter.OnLoadFavdrit
 /**
  * Created by Administrator on 2016/11/14.
  */
-
+/*
+* 新闻收藏适配器
+* */
 public class FavdriteAdapter extends RecyclerView.Adapter<FavdriteAdapter.MyViewHodler> {
     ArrayList<ChildInfo> mList;
     Context mContext;

@@ -1,11 +1,9 @@
 package zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.main;
 
-import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,6 +25,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +44,9 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.utils.HttpUtils;
 /**
  * Created by Administrator on 2016/10/31.
  */
-
+/*
+* 用户中心
+* */
 public class UserActivity extends AppCompatActivity implements View.OnClickListener, OnLoadRegisterListener {
     ImageView mBack;
     ImageView mImg_useractivity;
@@ -59,6 +60,15 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     PopupWindow mPopupWindow;
     RequestQueue mRequestQueue;
     String mToken;
+    ArrayList<LoginlogInfo> mList;
+    String mUid;
+    String mIntegration;
+    String path;
+    File file;
+    String mPortrait;
+    String mComnum;
+    String mLoginlog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,61 +81,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         initView();
         popupwindow();
         volley();
-    }
-
-    private void volley() {
-        mRequestQueue = Volley.newRequestQueue(this);
-        SharedPreferences count = this.getSharedPreferences("count", MODE_PRIVATE);
-        mToken = count.getString("token", null);
-        HttpUtils.connectionGET(HttpInfo.BASE_URL+HttpInfo.USER_URL+"ver="+1+"&imei="+0+"&token="+mToken,this,mRequestQueue);
-    }
-
-    ArrayList<LoginlogInfo> mList;
-    String mUid;
-    int mIntegration;
-    @Override
-    public void getRegister(String message) {
-        Log.e("=======","message==="+message);
-        try {
-            JSONObject jsonObject=new JSONObject(message);
-            JSONObject data = jsonObject.getJSONObject("data");
-            mUid = data.getString("uid");
-            mText1.setText(mUid);
-            mIntegration = data.getInt("integration");
-            String loginlog = data.getString("loginlog");
-            Log.e("======","loginlog===="+loginlog);
-            Gson gson=new Gson();
-            Type type = new TypeToken<ArrayList<LoginlogInfo>>() {
-            }.getType();
-            mList =gson.fromJson(loginlog,type);
-            adapter();
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void adapter() {
-        UserAdapter adapter=new UserAdapter(UserActivity.this);
-        adapter.setData(mList);
-        mLst.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-    }
-
-
-    private void popupwindow() {
-        mPopupWindow = new PopupWindow();
-        View view = this.getLayoutInflater().inflate(R.layout.popupwindow1, null);
-        mPopupWindow.setContentView(view);
-        mLyt_take = (LinearLayout) view.findViewById(R.id.lyt_take);
-        mLyt_sel = (LinearLayout) view.findViewById(R.id.lyt_sel);
-        mLyt_take.setOnClickListener(this);
-        mLyt_sel.setOnClickListener(this);
-        mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
-        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
-        mPopupWindow.setFocusable(true);
-        mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
     }
 
     //初始化view
@@ -142,19 +97,89 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         mBack.setOnClickListener(this);
     }
 
-    String path;
-    File file;
+    private void popupwindow() {
+        mPopupWindow = new PopupWindow();
+        View view = this.getLayoutInflater().inflate(R.layout.popupwindow1, null);
+        mPopupWindow.setContentView(view);
+        mLyt_take = (LinearLayout) view.findViewById(R.id.lyt_take);
+        mLyt_sel = (LinearLayout) view.findViewById(R.id.lyt_sel);
+        mLyt_take.setOnClickListener(this);
+        mLyt_sel.setOnClickListener(this);
+        mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.setOutsideTouchable(true);
+        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+    }
+
+    private void volley() {
+        mRequestQueue = Volley.newRequestQueue(this);
+        SharedPreferences count = this.getSharedPreferences("count", MODE_PRIVATE);
+        mToken = count.getString("token", null);
+        HttpUtils.connectionGET(HttpInfo.BASE_URL + HttpInfo.USER_URL + "ver=" + 1 + "&imei=" + 0 + "&token=" + mToken, this, mRequestQueue);
+    }
+
+
+    @Override
+    public void getRegister(String message) {
+        Log.e("=======", "message===" + message);
+        try {
+            JSONObject jsonObject = new JSONObject(message);
+            JSONObject data = jsonObject.getJSONObject("data");
+            mUid = data.getString("uid");
+            mIntegration = data.getString("integration");
+            Log.e("=====", "integration==" + mIntegration);
+            mPortrait = data.getString("portrait");
+            Log.e("=====", "portrait==" + mPortrait);
+            mComnum = data.getString("comnum");
+            Log.e("=====", "comnum==" + mComnum);
+            SharedPreferences shar=this.getSharedPreferences("person",MODE_PRIVATE);
+            SharedPreferences.Editor edit = shar.edit();
+            edit.putString("uid",mUid);
+            edit.putString("portrait",mPortrait);
+            edit.commit();
+            mLoginlog = data.getString("loginlog");
+            Log.e("======", "loginlog====" + mLoginlog);
+            mText1.setText(mUid);
+            mText3.setText(mComnum);
+            mText2.setText(mIntegration);
+            Picasso.with(UserActivity.this).load(mPortrait).into(mImg_useractivity);
+            Gson gson = new Gson();
+            Type type = new TypeToken<ArrayList<LoginlogInfo>>() {
+            }.getType();
+            mList = gson.fromJson(mLoginlog, type);
+            adapter();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void adapter() {
+        UserAdapter adapter = new UserAdapter(UserActivity.this);
+        adapter.setData(mList);
+        mLst.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
+
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_useractivity_back:
-                startActivity(new Intent(UserActivity.this, FragmentActivity.class));
-                finish();
+                startActivity(new Intent(UserActivity.this, MainActivity.class));
+                UserActivity.this.finish();
+
                 break;
             case R.id.btn_useractivity:
-                startActivity(new Intent(UserActivity.this, FragmentActivity.class));
-                finish();
+                SharedPreferences shar = this.getSharedPreferences("count", Context.MODE_PRIVATE);
+                SharedPreferences.Editor edit = shar.edit();
+                edit.clear();
+                edit.putInt("result",-1);
+                edit.commit();
+                startActivity(new Intent(UserActivity.this, MainActivity.class));
+                UserActivity.this.finish();
+
                 break;
             case R.id.img_useractivit:
                 mPopupWindow.showAtLocation(getLayoutInflater().inflate(R.layout.popupwindow1, null), Gravity.BOTTOM, 0, 0);
@@ -192,20 +217,20 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("======", "mData=" + data);
+        Log.e("======", "data=" + data);
         Log.e("------", "resultCode=" + resultCode);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case 1: {
-                    //cropFromFile(file);
-                    Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-                    mImg_useractivity.setImageBitmap(bitmap);
+                    cropFromFile(file);
+                   /* Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+                    mImg_useractivity.setImageBitmap(bitmap);*/
                     /*Bitmap bitmap   = mData.getParcelableExtra("mData");
                     mImg_useractivit y.setImageBitmap(bitmap);*/
                     break;
                 }
                 case 2: {
-                    //通过内容提供者获取系统中的数据
+                   /* //通过内容提供者获取系统中的数据
                     ContentResolver contentResolver = getContentResolver();
                     //根据地制值拿数据
                     Uri uri = data.getData();
@@ -216,12 +241,12 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                     String path = cursor.getString(cursor.getColumnIndex(array[0]));
                     cursor.close();
                     Bitmap bitmap = BitmapFactory.decodeFile(path);
-                    mImg_useractivity.setImageBitmap(bitmap);
-                    // crop(mData.getData());
+                    mImg_useractivity.setImageBitmap(bitmap);*/
+                    crop(data.getData());
                     break;
                 }
                 case 3: {
-                    Bitmap bitmap = data.getParcelableExtra("mData");
+                    Bitmap bitmap = data.getParcelableExtra("data");
                     mImg_useractivity.setImageBitmap(bitmap);
                     break;
                 }
@@ -249,7 +274,9 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         //设置剪切圆形图片
         intent.putExtra("circleCrop", "true");
         //设置返回数据
-        intent.putExtra("return_data", true);
+        intent.putExtra("return-data", true);
+        intent.putExtra("scale", "true");
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         //启动
         startActivityForResult(intent, 3);
 
@@ -274,7 +301,9 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         //设置剪切圆形图片
         intent.putExtra("circleCrop", "true");
         //设置返回数据
-        intent.putExtra("return_data", true);
+        intent.putExtra("return-data", true);
+        intent.putExtra("scale", "true");
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, file);
         //启动
         startActivityForResult(intent, 3);
 

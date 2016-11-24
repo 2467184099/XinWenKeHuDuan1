@@ -9,7 +9,9 @@ import java.util.ArrayList;
 /**
  * Created by Administrator on 2016/11/4.
  */
-
+   /*
+   * viewpager适配器
+   * */
 public class FragmentAdapter extends FragmentPagerAdapter {
     ArrayList<Fragment> mList;
 

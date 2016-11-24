@@ -20,7 +20,9 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.inter.OnLoadCameraL
 /**
  * Created by Administrator on 2016/11/15.
  */
-
+/*
+* 自定义照相机
+* */
 public class CameraView implements SurfaceHolder.Callback {
     Camera mCamera;
     OnLoadCameraListener mOnLoadCameraListener;

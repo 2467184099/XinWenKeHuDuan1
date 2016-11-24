@@ -15,6 +15,10 @@ import zhuoxin.edu.xinwenkehuduan.R;
 /**
  * Created by Administrator on 2016/10/28.
  */
+/*
+* 右边菜单界面
+*
+* */
 
 public class RightFragment extends Fragment implements View.OnClickListener{
     ImageView mImg;
@@ -30,12 +34,16 @@ public class RightFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initView(view);
+
+    }
+
+    private void initView(View view) {
         mImg= (ImageView) view.findViewById(R.id.img_qq);
         mImg1= (ImageView) view.findViewById(R.id.img_weixin);
         mImg2= (ImageView) view.findViewById(R.id.img_weibo);
         mImg3= (ImageView) view.findViewById(R.id.img_friends);
         mImg.setOnClickListener(this);
-
     }
 
     @Override

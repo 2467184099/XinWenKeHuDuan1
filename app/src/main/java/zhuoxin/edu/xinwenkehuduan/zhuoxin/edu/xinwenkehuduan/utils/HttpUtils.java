@@ -19,6 +19,7 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.inter.OnLoadRegiste
  */
 
 public class HttpUtils {
+    //get方法
     public static void connectionGET(String uri, final OnLoadRegisterListener onLoadRegisterListener, RequestQueue requestQueue) {
         StringRequest request = new StringRequest(Request.Method.GET, uri, new Response.Listener<String>() {
             @Override
@@ -34,7 +35,7 @@ public class HttpUtils {
         requestQueue.add(request);
 
     }
-
+   //post方法
     public static void connectionPOST(String uri, final String name, final String password, final OnLoadRegisterListener onLoadRegisterListener, RequestQueue requestQueue) {
         StringRequest request = new StringRequest(Request.Method.POST, uri, new Response.Listener<String>() {
             @Override

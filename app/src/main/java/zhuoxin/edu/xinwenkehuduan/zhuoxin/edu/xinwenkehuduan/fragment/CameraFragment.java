@@ -21,6 +21,9 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.view.CameraView;
 /**
  * Created by Administrator on 2016/11/14.
  */
+/*
+* 照相机
+* */
 
 public class CameraFragment extends Fragment implements OnLoadCameraListener,View.OnClickListener{
     SurfaceView mSurfaceView;

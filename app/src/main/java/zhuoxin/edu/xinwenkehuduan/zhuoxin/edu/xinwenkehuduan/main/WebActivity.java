@@ -1,6 +1,7 @@
 package zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.main;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -38,7 +39,9 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.utils.SqlUtils;
 /**
  * Created by Administrator on 2016/11/1.
  */
-
+/*
+* web界面
+* */
 public class WebActivity extends AppCompatActivity implements View.OnClickListener, OnLoadRegisterListener {
 
     WebView mWebView;
@@ -169,7 +172,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 String summary = mList.get(mPosition - 1).getSummary();
                 String icon = mList.get(mPosition - 1).getIcon();
                 String stamp = mList.get(mPosition - 1).getStamp();
-                String title = mList.get(mPosition - 1).getTitle();
+
                 int nid = mList.get(mPosition - 1).getNid();
                 String link = mList.get(mPosition - 1).getLink();
                 int type = mList.get(mPosition - 1).getType();
@@ -204,7 +207,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-
+    String title;
     @Override
     public void getRegister(String message) {
         Log.e("------", message);
@@ -213,6 +216,11 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             String message1 = jsonObject.getString("message");
             int status = jsonObject.getInt("status");
             int data = jsonObject.getInt("data");
+            title = mList.get(mPosition - 1).getTitle();
+            SharedPreferences shar = this.getSharedPreferences("web", MODE_PRIVATE);
+            SharedPreferences.Editor edit = shar.edit();
+            edit.putString("title",title);
+            edit.commit();
             mTxt.setText(data+"跟帖");
         } catch (JSONException e) {
             e.printStackTrace();

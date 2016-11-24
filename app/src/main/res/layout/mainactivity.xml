@@ -10,7 +10,6 @@
         android:layout_height="40dp"
         android:background="@mipmap/a"
         android:gravity="center"
-
         android:orientation="horizontal">
 
         <ImageView

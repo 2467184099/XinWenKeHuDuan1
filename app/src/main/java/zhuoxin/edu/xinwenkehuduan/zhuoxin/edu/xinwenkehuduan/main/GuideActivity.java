@@ -15,7 +15,9 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.adapter.GuideAdapte
 /**
  * Created by Administrator on 2016/10/27.
  */
-
+/*
+* 引导界面
+* */
 public class GuideActivity extends AppCompatActivity {
     ViewPager mViewPager;
     //四个点

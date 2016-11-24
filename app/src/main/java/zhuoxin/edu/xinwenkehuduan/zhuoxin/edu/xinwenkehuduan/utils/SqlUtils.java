@@ -13,7 +13,9 @@ import zhuoxin.edu.xinwenkehuduan.zhuoxin.edu.xinwenkehuduan.entity.ChildInfo;
 /**
  * Created by Administrator on 2016/11/10.
  */
-
+/*
+* 新闻收藏数据库
+* */
 public class SqlUtils {
     Context mContext;
     SqlHelper mSqlHelper;
@@ -23,7 +25,8 @@ public class SqlUtils {
         this.mContext = mContext;
         mSqlHelper = new SqlHelper(mContext);
     }
-                            // summary, icon, stamp, title, nid, link, type
+
+    // summary, icon, stamp, title, nid, link, type
     //插入数据
     public void insert(String summary, String icon, String stamp, String title, int nid, String link, int type) {
         SQLiteDatabase sqLiteDatabase = mSqlHelper.getWritableDatabase();
@@ -37,7 +40,10 @@ public class SqlUtils {
         values.put(DBInfo._TYPE, type);
         sqLiteDatabase.insert(DBInfo.TABLE_NAME, null, values);
     }
-      //查询全部数据
+
+
+
+    //查询全部数据
     public ArrayList<ChildInfo> query() {
         SQLiteDatabase database = mSqlHelper.getReadableDatabase();
         ArrayList<ChildInfo> data = new ArrayList<>();
@@ -52,11 +58,15 @@ public class SqlUtils {
             int type = mCursor.getInt(mCursor.getColumnIndex("type"));
             data.add(new ChildInfo(summary, icon, stamp, title, nid, link, type));
         }
+        mCursor.close();
         return data;
     }
+
+
+
     //删除数据
-    public void delete(int nid){
-        SQLiteDatabase database=mSqlHelper.getWritableDatabase();
-        database.delete(DBInfo.TABLE_NAME,"nid"+"=?",new String[]{nid+""});
+    public void delete(int nid) {
+        SQLiteDatabase database = mSqlHelper.getWritableDatabase();
+        database.delete(DBInfo.TABLE_NAME, "nid" + "=?", new String[]{nid + ""});
     }
 }
